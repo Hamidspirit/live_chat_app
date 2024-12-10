@@ -1,0 +1,47 @@
+{% extends  'base.html' %}
+{% block title %} Rgister {% endblock %}
+{% block content %}
+
+{% if not current_user.is_authenticated %}
+    <div>
+        <div class="auth_container">
+        <h1>Registeration Form</h1>
+        <form  id="login_form" method="post">
+            <input type="text" id="username"  name="username" placeholder="Username" required>
+            <input type="text" id="password"  name="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an Account? <a href="/login" id="login_link">Login</a></p>
+    </div>
+{% else %}
+    <div id="error_message">
+        <h2>You are already loged in!</h2>
+    </div>
+{% endif %}
+<!-- <script>
+    document.getElementById('login_form').addEventListener('submit',async (e)=>{
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {'content-type': 'aplication/json'},
+            body:JSON.stringify({username, password})
+        })
+
+        const data = await response.json();
+        if(response.ok){
+            alert('Registration was seccessful')
+            window.location.href = '/login.html';// redirect to login page
+        }else{
+            alert(data.error)
+        }
+    });
+
+    document.getElementById('login_link').addEventListener('click',()=>{
+        window.location.href = '/login.html';// redirect to login page
+    })
+</script> -->
+{% endblock %}

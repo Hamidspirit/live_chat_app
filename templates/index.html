@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Live Chat {% endblock %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<div id="chat_container">
+    <h1>Chat live</h1>
+    <div id="messages"></div>
+    <form  id="message_form">
+        <!-- <input type="text" id="username" placeholder="Your Name" required> -->
+        <input type="text" id="message" placeholder="Type a message" autocomplete="off" required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+{% else %}
+<div id="error_message">
+ <h2>You need to login!</h2>
+</div> 
+{% endif %}
+{% endblock %}
