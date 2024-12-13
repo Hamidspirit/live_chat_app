@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, redirect, jsonify, request, url_for, session
+from flask import Flask, render_template, redirect, jsonify, request, url_for
 from flask_socketio import SocketIO, emit
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,11 +24,12 @@ class User(UserMixin):
 # Load user from session
 @login_manager.user_loader
 def load_user(user_id):
-  conn = sqlite3.connect('chat.db')
-  cursor = conn.cursor()
-  cursor.execute('SELECT id, username FROM users WHERE id = ?', (user_id))
-  user = cursor.fetchall()[0] # returns a tuple
-  conn.close()
+  """This function loads the user object based on id(username)."""
+  with sqlite3.connect('chat.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute('SELECT id, username FROM users WHERE id = ?', (user_id))
+    user = cursor.fetchall()[0] # returns a tuple
+    
   if user:
     return User(user[0], user[1])
   return None
@@ -37,7 +38,7 @@ def load_user(user_id):
 # render the chat home page
 @app.route("/")
 def home():
-  return render_template("index.html")
+  return render_template('index.html')
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -73,16 +74,18 @@ def login():
     data = request.form
     username = data.get('username')
     password = data.get('password')
-   
-    with sqlite3.connect('chat.db') as conn:
-      cursor = conn.cursor()
-      cursor.execute('SELECT id, username, password FROM users WHERE username = ?', (username,))# or use list literal [username]
-      user = cursor.fetchall()[0]# returns tuple inside a list
+    try:
 
+      with sqlite3.connect('chat.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, username, password FROM users WHERE username = ?', (username,))# or use list literal [username]
+        user = cursor.fetchall()[0]# returns tuple inside a list
+    except Exception as e:
+      return jsonify({'message': 'user does not exist'})
     if user and check_password_hash(user[2], password):
       user_obj = User(user[0], user[1])
       login_user(user_obj)
-      return redirect("/")
+      return redirect('/')
     return jsonify({'message': ' Invalid credentials'}), 401
   return render_template('login.html')
 

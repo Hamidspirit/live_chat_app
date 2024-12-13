@@ -4,7 +4,8 @@ const socket = io(); //initilize web socket connection
 socket.on('new_message',  (data)=>{
     const messagesDiv = document.getElementById("messages");
     const messageElement = document.createElement("div");
-    messageElement.classList.add("message");
+    
+    messageElement.classList.add("messages");
     const avatarUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${data.username}`;
         messageElement.innerHTML = `
         <img src="${avatarUrl}" class="avatar" alt="Avatar">

@@ -1,55 +1,103 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 60px;
-    height: 80vh;
-    background-color: #f0f0f0;
+    background: #333;
 }
+
+* p,
+h1,
+h2, 
+h4{
+  color: white;  
+}
+
 
 #navbar {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: left;
-    position: fixed;
-}
-
-#navbar a{
-    text-decoration: none;
-    color: white;
+    justify-content: space-between;
+    flex-direction: row;
     margin: 10px 5px;
-
-    background-color: #007BFF;    
-    padding: 8px;
-    border-radius: 5px;
 }
 
-#navbar a:hover{
-    opacity: 0.8;
+
+/* user's hello note */
+#user {
+    margin-left: 1.7rem;
 }
 
-#container{
+/* containers and forms */
+
+#chat_container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-#chat-container {
-    width: 400px;
-    background: white;
-    padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
-#messages {
-    height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
+.auth_container{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 2em;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+#link{
+  color: hotpink;
+}
+
+/* styling for sending message form */
+#message_form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#message {
+  width: 24rem;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* styling for messages send by user and gotten from server */
+/* the container that includes all the shown messages */
+#messages {
+    height: 60vh;
+    width: 75vw;
+    overflow-y: auto;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    background-color: lightgrey;
+}
+
+/* styling for individual message */
+.messages{
+    background-color: #e7e7e7;
+    margin: 5px 5px;
+    padding: 8px;
+    border:1.5px solid #007BFF;
+    border-radius: 8px;
+}
+.current_user_message{
+    background-color: #6b0202;
+    margin: 5px 5px;
+    padding: 8px;
+    border:1.5px solid #007BFF;
+    border-radius: 8px;
+}
 .avatar {
     width: 30px;
     height: 30px;
@@ -57,12 +105,8 @@ body {
     margin-right: 10px;
     vertical-align: middle;
 }
-.message {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
 
+/* styling for notification */
 .notification {
     text-align: center;
     color: #666;
@@ -73,20 +117,21 @@ body {
     border-radius: 5px;
 }
 
-form {
-    display: flex;
-    gap: 10px;
+
+/* main error message for not logged in */
+#error_message{
+  display: flex;
+  justify-content: center;
 }
 
-input[type="text"] {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+#error_message h2{
+  color: white;
 }
 
-button {
-    padding: 8px 16px;
+/* styling for buttons */
+.btn-t {
+    height: 30px;
+    width: 60px;
     background-color: #007BFF;
     color: white;
     border: none;
@@ -94,6 +139,68 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.btn-t:hover {
     background-color: #0056b3;
+}
+
+.btn {
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    margin: 9px 5px;
+
+    background-color: #006BFF;    
+    padding: 7px;
+    border-radius: 4px;
+}
+
+.btn-one {
+  color: #FFF;
+  transition: all 0.3s;
+  position: relative;
+}
+.btn-one span {
+  transition: all 0.3s;
+}
+.btn-one::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.3s;
+  border-radius: 4px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-top-color: rgba(255,255,255,0.5);
+  border-bottom-color: rgba(255,255,255,0.5);
+  transform: scale(0.1, 1);
+}
+.btn-one:hover span {
+  letter-spacing: 2px;
+}
+.btn-one:hover::before {
+  opacity: 1; 
+  transform: scale(1, 1); 
+}
+.btn-one::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.3s;
+  background-color: rgba(255,255,255,0.1);
+}
+.btn-one:hover::after {
+  opacity: 0; 
+  transform: scale(0.1, 1);
 }

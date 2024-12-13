@@ -8,20 +8,19 @@
 </head>
 <body>
 
-    <nav id="navbar">
+    <header id="navbar">
         {% if current_user.is_authenticated %}
-            <a href="/logout">Logout</a>
-            <h4>Hello {{ current_user.username }}</h4>
+            <h4 id="user">Hello {{ current_user.username }}</h4>
+            <a href="/logout" class="btn btn-one">Logout</a>
         {% else %}
-            <a href="/login">Login</a>
-            <a href="/register">Create Account</a>
+            <a href="/login" class="btn btn-one">Login</a>
+            <a href="/register" class="btn btn-one">Create Account</a>
         {% endif %}
-    </nav>
+    </header>
     
-    <div id="container">
+    
     {% block content %}
     {% endblock %}
-    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
     <script src="/static/scripts/main.js"></script> 
