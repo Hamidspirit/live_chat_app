@@ -4,13 +4,8 @@ const socket = io(); //initilize web socket connection
 socket.on('new_message',  (data)=>{
     const messagesDiv = document.getElementById("messages");
     const messageElement = document.createElement("div");
-    
-    messageElement.classList.add("messages");
-    const avatarUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${data.username}`;
-        messageElement.innerHTML = `
-        <img src="${avatarUrl}" class="avatar" alt="Avatar">
-        <strong>${data.username}</strong>: ${data.content} <small>[${data.timestamp}]</small>
-    `;
+
+    messageElement.innerHTML = stylingMessages(data, messageElement) 
     messagesDiv.appendChild(messageElement);
 
     // scrol to bottom
@@ -63,14 +58,26 @@ async function loadMessages(){
 
     messages.forEach(msg => {
         const messageElement = document.createElement("div");
-        messageElement.classList.add('messages');
-        const avatarUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${msg.username}`;
-         messageElement.innerHTML = `
-            <img src="${avatarUrl}" class="avatar" alt="Avatar">
-            <strong>${msg.username}</strong>: ${msg.content} <small>[${msg.timestamp}]</small>
-        `;
+        // messageElement.classList.add('messages');
+        messageElement.innerHTML = stylingMessages(msg, messageElement)
         messagesDiv.appendChild(messageElement);
     });
 }
 
 loadMessages(); // initial load 
+
+function stylingMessages(data, messageElement){
+    // add diferent style for active client 
+    const currentUser = document.getElementById("user").innerText.slice(6);
+    if(currentUser === data.username){
+        messageElement.classList.add("current_user_message")
+    }else{
+        messageElement.classList.add("messages");
+    }
+    // add profile pic and styling to message div
+    const avatarUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${data.username}`;
+    inlineStyle = `
+    <img src="${avatarUrl}" class="avatar" alt="Avatar">
+    <strong>${data.username}</strong> ${data.content} <small>[${data.timestamp}]</small `;
+    return inlineStyle
+}

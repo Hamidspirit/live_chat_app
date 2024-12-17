@@ -6,6 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import datetime
 
+# Todo: add nice error page 
+# Todo: add direct login after register
+
 app = Flask(__name__)
 app.secret_key = "secret key"
 socketio = SocketIO(app)
@@ -85,7 +88,7 @@ def login():
     if user and check_password_hash(user[2], password):
       user_obj = User(user[0], user[1])
       login_user(user_obj)
-      return redirect('/')
+      return redirect(url_for('home'))
     return jsonify({'message': ' Invalid credentials'}), 401
   return render_template('login.html')
 
@@ -93,7 +96,7 @@ def login():
 @login_required
 def logout():
   logout_user()
-  return redirect("/")
+  return redirect(url_for('home'))
 
 
 # Route to fetch all messages

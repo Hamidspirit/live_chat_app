@@ -1,3 +1,4 @@
+/* this css was not written mindfully  */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -85,17 +86,25 @@ input[type="text"] {
 
 /* styling for individual message */
 .messages{
+    display: flex;
+    align-items: center;
     background-color: #e7e7e7;
+    gap: 1rem;
     margin: 5px 5px;
     padding: 8px;
     border:1.5px solid #007BFF;
     border-radius: 8px;
 }
 .current_user_message{
-    background-color: #6b0202;
+    display: flex;
+    flex: content;
+    flex-direction: row-reverse;
+    align-items: center;
+    background-color:  #0057b358 ;
+    gap: 1rem;
     margin: 5px 5px;
     padding: 8px;
-    border:1.5px solid #007BFF;
+    border:1.5px solid #0059ff;
     border-radius: 8px;
 }
 .avatar {
