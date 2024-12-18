@@ -8,6 +8,7 @@ import datetime
 
 # Todo: add nice error page 
 # Todo: add direct login after register
+# Todo: add active user util
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -20,6 +21,7 @@ login_manager.login_view = 'login'
 
 # User model
 class User(UserMixin):
+  """Create user object to give to flask-login"""
   def __init__(self, id, username):
     self.id = id
     self.username = username
@@ -41,10 +43,12 @@ def load_user(user_id):
 # render the chat home page
 @app.route("/")
 def home():
+  """Home Page"""
   return render_template('index.html')
 
 @app.route("/register", methods=["GET","POST"])
 def register():
+  """This function adds new user information to database."""
   # check if user made post request
   if request.method == "POST":
     data = request.form
@@ -72,6 +76,7 @@ def register():
 
 @app.route("/login", methods=["GET","POST"])
 def login():
+  """This function checks user credential and verifys login."""
   # if request == post then find user in database
   if request.method == "POST":
     data = request.form
@@ -103,13 +108,13 @@ def logout():
 @app.route("/api/messages", methods=["GET"])
 @login_required
 def get_messages():
-  conn = sqlite3.connect('chat.db')
-  cursor = conn.cursor()
+  """This function is an api end point for retrieving all messages from database."""
+  with sqlite3.connect("chat.db") as conn:
+    cursor = conn.cursor()
 
-  # Fetch all messages
-  cursor.execute("SELECT username, content, timestamp FROM messages ORDER by timestamp ASC")
-  messages = cursor.fetchall()
-  conn.close()
+    # Fetch all messages
+    cursor.execute("SELECT username, content, timestamp FROM messages ORDER by timestamp ASC")
+    messages = cursor.fetchall()
 
   # format message before returning
   formated_message = [
@@ -122,7 +127,11 @@ def get_messages():
   return jsonify(formated_message)
 
 @app.route("/api/messages", methods=["POST"])
+@login_required
 def add_message():
+  """This function handles post request to api end point.
+    lets users add new message to chat and broadcast it.
+  """
   data = request.json # get JSON data from the request
   username = current_user.username
   content = data.get('content')

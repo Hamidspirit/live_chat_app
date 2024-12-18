@@ -26,4 +26,4 @@ with sqlite3.connect('chat.db') as conn:
 
     conn.commit()
 
-print("Data base initialized!")
+print("Database initialized!")
