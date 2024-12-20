@@ -1,13 +1,12 @@
 import sqlite3
-from flask import Flask, render_template, redirect, jsonify, request, url_for
+from flask import Flask, render_template, redirect, jsonify, request, url_for,flash
 from flask_socketio import SocketIO, emit
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import datetime
 
-# Todo: add nice error page 
-# Todo: add direct login after register
+# Todo: add tests
 # Todo: add active user util
 
 app = Flask(__name__)
@@ -44,7 +43,8 @@ def load_user(user_id):
 @app.route("/")
 def home():
   """Home Page"""
-  return render_template('index.html')
+  errmessage = request.args.get("errmessage")  # Get the query parameter
+  return render_template('index.html', errmessage = errmessage)
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -65,9 +65,14 @@ def register():
         cursor = conn.cursor()
         cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
         conn.commit()
-        return redirect(url_for('login'))
+        cursor.execute('SELECT id, username FROM users WHERE username = ?', (username,))
+        user = cursor.fetchall()[0]
+        user_obj = User(user[0], user[1])
+        login_user(user_obj)
+        return redirect(url_for('home'))
     except sqlite3.IntegrityError:
-      return jsonify({'message': 'Username Already exists'}), 400
+      flash("Username Already exists!")
+      return redirect(url_for("login")) 
     except Exception as e:
       return jsonify({'message': f'[ERROR] {e}'}), 400
 
@@ -88,13 +93,16 @@ def login():
         cursor = conn.cursor()
         cursor.execute('SELECT id, username, password FROM users WHERE username = ?', (username,))# or use list literal [username]
         user = cursor.fetchall()[0]# returns tuple inside a list
-    except Exception as e:
-      return jsonify({'message': 'user does not exist'})
+    except IndexError as e:
+      flash("User Not Found!")
+      return redirect(url_for("login"))
     if user and check_password_hash(user[2], password):
       user_obj = User(user[0], user[1])
       login_user(user_obj)
       return redirect(url_for('home'))
-    return jsonify({'message': ' Invalid credentials'}), 401
+
+    flash('Invalid credential')
+    return redirect(url_for("login"))
   return render_template('login.html')
 
 @app.route("/logout")
